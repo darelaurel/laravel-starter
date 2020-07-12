@@ -24,23 +24,19 @@
         <select class="custom-select" id="inputGroupSelect01" name="status" >
             <option value="0">Choisir</option>
             @foreach($client->getStatusOptions() as $key=>$value)
-                <option value="{{$key}}" {{ $client->status==$value ? 'selected':true}}>{{$value}}</option>
+                <option value="{{$key}}" {{ $client->status==$value ? 'selected':true}}>
+                    {{$value}}
+                </option>
             @endforeach 
         </select>
-        @error('status')
-            <div class="alert alert-danger"> {{$status->first('status')}} </div>
-        @enderror
     </div>  
     <div class="form-group col-md-6">
         <select class="custom-select" id="inputGroupSelect01" name="entreprise_id" >
             <option value="0">Choisir</option>
             @foreach($entreprises as $entreprise)
-                <option value="{{$entreprise->id}}" {{ $client->entreprise_id==$entreprise->id ?'selected':true }}> {{$entreprise->id}} </option>
+                <option value="{{$entreprise->id}}" {{ $client->entreprise_id==$entreprise->id ?'selected':true }}> {{$entreprise->nom}} </option>
             @endforeach 
 
         </select>
-        @error('entreprise_id')
-            <div class="alert alert-danger"> {{$status->first('entreprise_id')}} </div>
-        @enderror
     </div> 
 </div>

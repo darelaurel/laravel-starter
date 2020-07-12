@@ -7,7 +7,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <b>Etes-vous sûr de vouloir supprimer ?</b>
+        <b>Etes-vous sûr de vouloir supprimer ? {{$value->nom}} </b>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>

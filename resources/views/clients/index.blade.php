@@ -1,31 +1,36 @@
 @extends('welcome')
 
 @section('content')
-    
-    <a href="/clients/create" class="btn btn-primary mt-2 mb-2">Nouveau client</a>
-    <table class="table table-hover">
+    @can('create', 'App\Client::class')
+        <a href="/clients/create" class="btn btn-primary mt-2 mb-2">Nouveau client</a>
+    @endcan
+    <table class="table table-hover table-bordered">
         <thead>
           <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Nom</th>
-              <th scope="col">Email</th>
-              <th scope="col">Entreprise</th>
-              <th scope="col">Statut</th>
-              <th scope="col">Actions</th>
+              <th>Id</th>
+              <th>Photo</th>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Entreprise</th>
+              <th>Statut</th>
+              <th>Actions</th>
           </tr>
         </thead>
         <tbody>
             @foreach($clients as $value)
                   <tr>
-                    <th scope="row">{{$value->id}}</th>
-                    <td> <a href="/clients/{{$value->id}}">{{$value->nom}}</a></td>
-                    <td>{{$value->email}}</td>
-                    <td>{{$value->entreprise->nom}}</td>
-                    <td>{{$value->status}}</td>
-                    <td>
+                    <td width="5%">{{$value->id}}</td>
+                    <td width="20%">
+                        <img src="{{asset('storage/'.$value->image)}}" width="100" class=" rounded img-thumbnail">
+                    </td>
+                    <td width="10%"> <a href="/clients/{{$value->id}}">{{$value->nom}}</a></td>
+                    <td width="15%">{{$value->email}}</td>
+                    <td width="15%">{{$value->entreprise->nom}}</td>
+                    <td width="10%">{{$value->status}}</td>
+                    <td width="25%">
                       <a class="btn btn-warning" href="/clients/{{$value->id}}/edit">Editer</a>
                       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
-                          Supprimer
+                          Supprimer 
                       </button>
                       @include('includes.modal')
                     </td>
@@ -33,5 +38,8 @@
             @endforeach  
         </tbody>
     </table>
-    
+    <div class="row d-flex justify-content-center">
+         {{$clients->links()}}    
+    </div>
+
 @endsection

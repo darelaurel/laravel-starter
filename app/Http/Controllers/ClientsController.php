@@ -8,16 +8,24 @@ use App\Entreprise;
 
 class ClientsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index']);
+    }
 
     public function index()
     {
-      $clients=Client::all();
+      $clients=Client::with('entreprise')->paginate(15);
       //$clients=Client::status();
 
       return view('clients.index', compact('clients'));
     }
 
     public function create(){
+
+        //autoriser la policy
+        $this->authorize('create', Client::class);
+        
         $entreprises=Entreprise::all();
         $client= new Client();
         return view('clients.create', compact('entreprises', 'client'));
@@ -37,33 +45,17 @@ class ClientsController extends Controller
 
     public function store()
     {
-        $datas=request()->validate([
-          'nom'=>'required|min:3',
-          'email'=>'required|email',
-          'status'=>'required|integer',
-          'entreprise_id'=>'required|integer'
-        ]);
-
-       // dd($datas);
-        Client::create($datas);
-        
+        $client=Client::create($this->validateur());
+        $this->storeImage($client);
         return redirect('/clients');
-        
         //return back();
     }
 
     public function update(Client $client)
     {
-        $datas=request()->validate([
-          'nom'=>'required|min:3',
-          'email'=>'required|email',
-          'status'=>'required|integer',
-          'entreprise_id'=>'required|integer'
-        ]);
-
        // dd($datas);
-        $client->update($datas);
-        
+        $client->update($this->validateur());
+        $this->storeImage($client);
         return redirect('/clients/'.$client->id);
     }
 
@@ -71,5 +63,28 @@ class ClientsController extends Controller
     {
         $client->delete();   
         return redirect('/clients');
+    }
+
+    private function validateur()
+    {
+        $datas=request()->validate([
+            'nom'=>'required|min:3',
+            'email'=>'required|email',
+            'status'=>'required|integer',
+            'entreprise_id'=>'required|integer',
+            'image'=>'sometimes'
+          ]);
+          return $datas;
+    }
+
+    private function storeImage($client)
+    {
+        if(request('image'))
+        {
+            //dd(request('image'));
+            $client->update([
+                'image'=>request('image')->store('avatars','public')
+            ]);
+        }
     }
 }
